@@ -1,10 +1,12 @@
 import { useState } from "react";
 import Iimage from "@/icons/Image";
+import XButton from "@/icons/x-button";
 
-export const StepThree = ({ onNext }) => {
+export const StepThree = ({ onNext, onBack }) => {
   const [stepThreeValue, setStepThreeValue] = useState({});
   const [error, setError] = useState({});
-  
+
+  console.log(stepThreeValue);
 
   const isOver18 = (dateOfBirth) => {
     const today = new Date();
@@ -12,12 +14,14 @@ export const StepThree = ({ onNext }) => {
     const age = today.getFullYear() - birthDate.getFullYear();
     const month = today.getMonth() - birthDate.getMonth();
     if (month < 0 || (month === 0 && today.getDate() < birthDate.getDate())) {
-        return age - 1;
-      }
+      return age - 1;
+    }
     return age;
   };
 
   const onSubmit = () => {
+    console.log("hekkk");
+
     let hasError = false;
     if (
       !stepThreeValue.dateOfBirth ||
@@ -25,17 +29,46 @@ export const StepThree = ({ onNext }) => {
     ) {
       setError((prev) => ({ ...prev, dateOfBirth: "Төрсөн өдрөө оруулна уу" }));
     } else if (isOver18(stepThreeValue.dateOfBirth) <= 18) {
-        setError((prev) => ({
-          ...prev,
-          dateOfBirth: "Таны нас 18-аас их байх ёстой.",
-        }));
-        hasError = true;
-      }
+      console.log("18s doosh");
+
+      setError((prev) => ({
+        ...prev,
+        dateOfBirth: "Таны нас 18-аас их байх ёстой.",
+      }));
+      hasError = true;
+    }
+    if (!stepThreeValue.image) {
+      console.log("zuraggu");
+
+      setError((prev) => ({ ...prev, image: "Профайл зурагаа оруулна уу" }));
+      hasError = true;
+    }
+    if (!hasError) {
+      console.log("ss");
+
+      onNext();
+    }
   };
 
   const onStepThreeChange = (e) => {
-    setError({})
+    setError({});
     setStepThreeValue({ ...stepThreeValue, dateOfBirth: e.target.value });
+  };
+  const onImageChange = (e) => {
+    setError({});
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setStepThreeValue((prev) => ({ ...prev, image: reader.result }));
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setError({});
+    setStepThreeValue((prev) => ({ ...prev, image: null }));
   };
 
   return (
@@ -63,21 +96,48 @@ export const StepThree = ({ onNext }) => {
           )}
         </div>
         <div className="space-y-2 mt-8">
-          <label className="block text-sm font-semibold leading-4 text-[#334155]">
+          <label
+            htmlFor="imageInput"
+            className="block text-sm font-semibold leading-4 text-[#334155]"
+          >
             Profile image <span class="text-red-600">*</span>
           </label>
 
-          <div className="flex flex-col items-center justify-center gap-y-2 cursor-pointer bg-gray-100 h-[180px] border rounded-md border-solid">
-            <div className="bg-white rounded-full w-7 h-7 flex items-center justify-center">
-              <Iimage />
+          {!stepThreeValue.image && (
+            <>
+              <label
+                htmlFor="imageInput"
+                className="flex flex-col items-center relative justify-center gap-y-2 cursor-pointer z-10 bg-gray-100 h-[220px] border rounded-md border-solid"
+              >
+                <div className="rounded-full justify-center items-center flex  flex-col">
+                  <Iimage />
+                  <p className="text-sm text-center">Browse or Drop Image</p>
+                </div>
+              </label>
+              <input
+                id="imageInput"
+                className="hidden"
+                type="file"
+                onChange={onImageChange}
+              />
+            </>
+          )}
+
+          {stepThreeValue.image && (
+            <div className="relative">
+              <XButton className="absolute mt-[10px] right-[10px] " onClick={removeImage} />
+              <img
+                className="h-[220px] rounded-md w-[415px]"
+                src={stepThreeValue.image}
+              />
             </div>
-            <div className="text-sm text-center">Browse or Drop Image</div>
-          </div>
-          <input hidden type="file" />
-          <p class="text-red-600 text-xs">Профайл зурагаа оруулна уу</p>
+          )}
+
+          {error.image && <p className="text-red-600">{error.image}</p>}
         </div>
         <div className="flex w-full gap-x-2 mt-auto">
           <button
+          onClick={onBack}
             type="button"
             className="flex items-center justify-center w-32 h-[44px] mt-[50px] gap-x-3 rounded-md border border-[#CBD5E1] transition-all duration-300 hover:bg-gray-100"
           >
@@ -89,7 +149,7 @@ export const StepThree = ({ onNext }) => {
             className="flex flex-1 items-center justify-center h-[44px] gap-x-3 rounded-md bg-[#121316] text-white transition-all duration-300 hover:opacity-80 mt-[50px]"
           >
             {" "}
-            submit{" "}
+            continue 3/3{" "}
           </button>
         </div>
       </div>

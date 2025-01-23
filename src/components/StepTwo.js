@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export const StepTwo = ({onNext}) => {
+export const StepTwo = ({onNext, onBack}) => {
   const [stepTwoValue, setStepTwoValue] = useState({});
   const [error, setError] = useState({});
 
@@ -129,6 +129,7 @@ export const StepTwo = ({onNext}) => {
           </div>
           <div className="flex w-full gap-x-2 mt-auto">
             <button
+            onClick={onBack}
               type="button"
               className="flex items-center justify-center w-32 h-[44px] mt-[50px] gap-x-3 rounded-md border border-[#CBD5E1] transition-all duration-300 hover:bg-gray-100"
             >
