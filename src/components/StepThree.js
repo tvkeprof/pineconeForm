@@ -1,12 +1,18 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Iimage from "@/icons/Image";
 import XButton from "@/icons/x-button";
 
 export const StepThree = ({ onNext, onBack }) => {
-  const [stepThreeValue, setStepThreeValue] = useState({});
+  const [stepThreeValue, setStepThreeValue] = useState(()=>{
+    const prev = JSON.parse(localStorage.getItem("stepThree") || "{}");
+    return prev;
+  });
   const [error, setError] = useState({});
 
   console.log(stepThreeValue);
+  useEffect (()=>{
+    localStorage.setItem("stepThree", JSON.stringify(stepThreeValue));
+  }, [stepThreeValue])
 
   const isOver18 = (dateOfBirth) => {
     const today = new Date();
@@ -72,7 +78,7 @@ export const StepThree = ({ onNext, onBack }) => {
   };
 
   return (
-    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto">
+    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto animate-slideIn animate-fadeIn">
       <div>
         <div className="flex flex-col gap-[20px] space-y-2 mb-7">
           <img className="w-[60px] h-[60px]" src="./pcLogo.png" />
@@ -86,6 +92,7 @@ export const StepThree = ({ onNext, onBack }) => {
         <div className="text-sm font-semibold leading-4 text-[#334155] space-y-2">
           Date of birth<span className="text-red-600">*</span>
           <input
+          value={stepThreeValue.dateOfBirth}
             onChange={onStepThreeChange}
             type="date"
             placeholder="--/--/--"
@@ -115,6 +122,7 @@ export const StepThree = ({ onNext, onBack }) => {
                 </div>
               </label>
               <input
+              value={stepThreeValue.image}
                 id="imageInput"
                 className="hidden"
                 type="file"

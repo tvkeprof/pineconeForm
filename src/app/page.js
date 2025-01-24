@@ -14,7 +14,7 @@ export default function Home() {
     setStep((prevStep) => prevStep -1)
   };
   return (
-    <div className="w-screen h-screen items-center justify-center bg-[#F4F4F4] ">
+    <div className="w-screen h-screen flex items-center justify-center bg-[#F4F4F4] ">
       {step === 1 && <StepOne onNext={nextStep} />}
       {step === 2 && <StepTwo onNext={nextStep} onBack={backStep}  />}
       {step === 3 && <StepThree onNext={nextStep} onBack={backStep}  />}

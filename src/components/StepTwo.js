@@ -1,8 +1,14 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const StepTwo = ({onNext, onBack}) => {
-  const [stepTwoValue, setStepTwoValue] = useState({});
+  const [stepTwoValue, setStepTwoValue] = useState(()=> {
+    const prev = JSON.parse(localStorage.getItem("stepTwo") || "{}");
+    return prev; 
+  });
   const [error, setError] = useState({});
+  useEffect (()=> {
+    localStorage.setItem("stepTwo", JSON.stringify(stepTwoValue));
+  },[stepTwoValue])
 
   const onSubmit = () => {
     let hasError = false;
@@ -29,7 +35,7 @@ export const StepTwo = ({onNext, onBack}) => {
         ...prev,
         Password: "Нууц үгээ оруулна уу.",
       }));
-    } else if (!/^\d{6}$/.test(stepTwoValue.Password)) {
+    } else if (!/^[a-zA-Z0-9!@#$%^&*]{6,16}$/.test(stepTwoValue.Password)) {
       setError((prev) => ({
         ...prev,
         Password: "6 оронтой дугаар оруулна уу.",
@@ -73,7 +79,7 @@ export const StepTwo = ({onNext, onBack}) => {
     setStepTwoValue({ ...stepTwoValue, ConfirmPassword: e.target.value });
   };
   return (
-    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto">
+    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto animate-slideIn animate-fadeIn">
       <div>
         <div className="flex flex-col gap-[20px] space-y-2 mb-7">
           <img className="w-[60px] h-[60px]" src="./pcLogo.png" />
@@ -89,6 +95,7 @@ export const StepTwo = ({onNext, onBack}) => {
             Email<span className="text-red-600">*</span>
             <input
               onChange={onEmailChange}
+              value={stepTwoValue.Email}
               placeholder="Your email"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
             />
@@ -98,6 +105,7 @@ export const StepTwo = ({onNext, onBack}) => {
             Phone number<span className="text-red-600">*</span>
             <input
               onChange={onPhoneNumberChange}
+              value={stepTwoValue.PhoneNumber}
               placeholder="Your phone number"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
             />
@@ -110,6 +118,7 @@ export const StepTwo = ({onNext, onBack}) => {
             <input
             type="password"
               onChange={onPasswordChange}
+              value={stepTwoValue.Password}
               placeholder="Your password"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
             />
@@ -120,6 +129,7 @@ export const StepTwo = ({onNext, onBack}) => {
             <input
             type="password"
               onChange={onConfirmPasswordChange}
+              value={stepTwoValue.ConfirmPassword}
               placeholder="Confirm password"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
             />

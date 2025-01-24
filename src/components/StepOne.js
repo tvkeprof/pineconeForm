@@ -1,8 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const StepOne = ({onNext}) => {
-  const [formValue, setFormValue] = useState({});
+  const [formValue, setFormValue] = useState(()=>{
+    const prev = JSON.parse(localStorage.getItem("stepOne") || "{}");
+
+    return prev;
+    
+  });
+  console.log(formValue);
+  
   const [error, setError] = useState({});
+
+  useEffect(()=> {
+    localStorage.setItem("stepOne", JSON.stringify(formValue));
+  }, [formValue]);
   const onSubmit = () => {
     console.log(formValue);
     let hasError = false;
@@ -40,7 +51,7 @@ export const StepOne = ({onNext}) => {
     setFormValue({ ...formValue, userName: e.target.value });
   };
   return (
-    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto">
+    <div className="w-[480px] min-h-[655px] p-8 bg-white rounded-lg m-auto animate-slideIn animate-fadeIn">
       <div>
         <div className="flex flex-col gap-[20px] space-y-2 mb-7">
           <img className="w-[60px] h-[60px]" src="./pcLogo.png" />
@@ -58,6 +69,7 @@ export const StepOne = ({onNext}) => {
               onChange={onFirstNameChange}
               placeholder="Your first name"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
+              value={formValue.firstname}
             />
             {error.firstname && (
               <p className="text-red-400">{error.firstname}</p>
@@ -69,6 +81,7 @@ export const StepOne = ({onNext}) => {
               onChange={onLastNameChange}
               placeholder="Your last name"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
+              value={formValue.lastName}
             />
             {error.lastName && <p className="text-red-400">{error.lastName}</p>}
           </div>
@@ -78,6 +91,7 @@ export const StepOne = ({onNext}) => {
               onChange={onUserNameChange}
               placeholder="Your username"
               className="w-full p-3 text-base leading-5 rounded-md outline outline-[#CBD5E1] focus:outline-[#0CA5E9] text-[#121316]"
+              value={formValue.userName}
             />
             {error.userName && <p className="text-red-400">{error.userName}</p>}
           </div>
