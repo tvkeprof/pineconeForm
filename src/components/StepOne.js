@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 
 export const StepOne = ({onNext}) => {
   const [formValue, setFormValue] = useState(()=>{
-    const prev = JSON.parse(localStorage.getItem("stepOne") || "{}");
+
+    const prev = JSON.parse(typeof window !== "undefined" && localStorage.getItem("stepOne") || "{}");
 
     return prev;
     
@@ -12,7 +13,7 @@ export const StepOne = ({onNext}) => {
   const [error, setError] = useState({});
 
   useEffect(()=> {
-    localStorage.setItem("stepOne", JSON.stringify(formValue));
+  typeof window !== "undefined" &&  localStorage.setItem("stepOne", JSON.stringify(formValue));
   }, [formValue]);
   const onSubmit = () => {
     console.log(formValue);

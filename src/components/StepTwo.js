@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 
 export const StepTwo = ({onNext, onBack}) => {
   const [stepTwoValue, setStepTwoValue] = useState(()=> {
-    const prev = JSON.parse(localStorage.getItem("stepTwo") || "{}");
+    const prev = JSON.parse( typeof window !== "undefined" &&  localStorage.getItem("stepTwo") || "{}");
     return prev; 
   });
   const [error, setError] = useState({});
   useEffect (()=> {
-    localStorage.setItem("stepTwo", JSON.stringify(stepTwoValue));
+    typeof window !== "undefined" &&  localStorage.setItem("stepTwo", JSON.stringify(stepTwoValue));
   },[stepTwoValue])
 
   const onSubmit = () => {

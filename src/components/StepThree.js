@@ -4,14 +4,14 @@ import XButton from "@/icons/x-button";
 
 export const StepThree = ({ onNext, onBack }) => {
   const [stepThreeValue, setStepThreeValue] = useState(()=>{
-    const prev = JSON.parse(localStorage.getItem("stepThree") || "{}");
+    const prev = JSON.parse(typeof window !== "undefined" && localStorage.getItem("stepThree") || "{}");
     return prev;
   });
   const [error, setError] = useState({});
 
   console.log(stepThreeValue);
   useEffect (()=>{
-    localStorage.setItem("stepThree", JSON.stringify(stepThreeValue));
+    typeof window !== "undefined" &&  localStorage.setItem("stepThree", JSON.stringify(stepThreeValue));
   }, [stepThreeValue])
 
   const isOver18 = (dateOfBirth) => {
